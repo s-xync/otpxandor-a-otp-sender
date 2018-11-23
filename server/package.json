@@ -1,0 +1,10 @@
+{
+  "name": "otpxandor-server",
+  "version": "0.1.0",
+  "main": "sever.js",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "nodemon start",
+    "start": "npm start"
+  }
+}
