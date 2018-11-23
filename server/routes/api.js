@@ -55,12 +55,36 @@ apiRouter.get('/otps',
       })
       return res.json({
         success : true,
-        message : "Otps retrieved successfully",
+        message : "OTPs retrieved successfully",
         otps : otpsArr
       });
     }
   });
 });
 
+apiRouter.post('/sendotp',
+(req, res) => {
+  const { contactID, otp } = req.body;
+  //otp has to be of length 6 and has to be a number
+  if(otp.length === 6 && !isNaN(otp)){
+    const newOtp = {
+      body : otp,
+      contactID : contactID
+    };
+    Otp.create(newOtp, (err, otp) => {
+      if(err){
+        return res.json({
+          success : false,
+          message : "Internal server error"
+        });
+      }else{
+        return res.json({
+          success : true,
+          message : "OTP sent successfully"
+        });
+      }
+    });
+  }
+});
 
 module.exports = apiRouter;
