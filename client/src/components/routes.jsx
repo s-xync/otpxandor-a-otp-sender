@@ -1,11 +1,31 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
+import axios from 'axios';
+import { setApiUrl } from '../actions/apiUrlActions';
 import Contacts from './contacts';
 import ContactDetails from './contactDetails';
 import SendOtp from './sendOtp';
 import Otps from './otps';
 
 class Routes extends Component{
+
+  componentWillMount(){
+    this.props.setApiUrl(process.env.REACT_APP_SERVER_API_URL);
+  }
+
+  componentDidUpdate(prevProps, prevState){
+
+  }
+
+
+  getAllData = () => {
+
+  }
+
+
+
   render(){
     return(
       <BrowserRouter>
@@ -22,4 +42,8 @@ class Routes extends Component{
   }
 }
 
-export default Routes;
+const mapStateToProps = ({ apiUrl }) => ({
+  apiUrl : apiUrl.value
+});
+
+export default connect(mapStateToProps, { setApiUrl })(Routes);
