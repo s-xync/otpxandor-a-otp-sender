@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import axios from 'axios';
 import { setApiUrl } from '../actions/apiUrlActions';
+import { setContactsDetails } from '../actions/contactsActions';
+import { setOtpsDetails } from '../actions/otpsActions';
 import Contacts from './contacts';
 import ContactDetails from './contactDetails';
 import SendOtp from './sendOtp';
@@ -16,13 +18,30 @@ class Routes extends Component{
   }
 
   componentDidUpdate(prevProps, prevState){
-
+    if((prevProps.apiUrl !== this.props.apiUrl) && this.props.apiUrl){
+      this.getAllData();
+    }
   }
 
 
   getAllData = () => {
-
-  }
+    if(this.props.apiUrl){
+      axios.get(this.props.apiUrl + '/api/contacts').then((response) => {
+        if(response.data.success){
+          this.props.setContactsDetails(response.data.contacts);
+          axios.get(this.props.apiUrl + '/api/otps').then((response) => {
+            if(response.data.success){
+              this.props.setOtpsDetails(response.data.otps);
+            }else{
+              console.log("Server error");
+            }
+          });
+        }else{
+          console.log("Server error");
+        }
+      });
+    }
+  };
 
 
 
@@ -42,8 +61,15 @@ class Routes extends Component{
   }
 }
 
+Routes.propTypes = {
+  apiUrl : propTypes.string.isRequired,
+  setApiUrl : propTypes.func.isRequired,
+  setContactsDetails : propTypes.func.isRequired,
+  setOtpsDetails : propTypes.func.isRequired
+};
+
 const mapStateToProps = ({ apiUrl }) => ({
   apiUrl : apiUrl.value
 });
 
-export default connect(mapStateToProps, { setApiUrl })(Routes);
+export default connect(mapStateToProps, { setApiUrl, setContactsDetails, setOtpsDetails })(Routes);
