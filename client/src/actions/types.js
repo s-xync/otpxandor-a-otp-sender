@@ -1,1 +1,3 @@
 export const SET_API_URL = "SET_API_URL";
+export const SET_CONTACTS_DETAILS = "SET_CONTACTS_DETAILS";
+export const SET_OTPS_DETAILS = "SET_OTPS_DETAILS";
