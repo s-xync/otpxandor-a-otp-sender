@@ -5,6 +5,7 @@ const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
 const api = require('./routes/api');
+const setupDatabase = require('./staticDatabase/setupDatabase');
 
 app = express();
 
@@ -14,6 +15,9 @@ const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/otpxandor';
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI,{ useCreateIndex: true, useNewUrlParser: true });
+
+// setup static data in the database
+setupDatabase();
 
 // cors middleware
 const corsOptions = {
