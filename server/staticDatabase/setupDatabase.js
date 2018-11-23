@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const Contact = require('../models/contact');
 const Otp = require('../models/otp');
-const contacsData = require('./database.json');
+
+const contacsData = require('./another_database.json'); //debug
+//use the below line instead of the above one
+// const contacsData = require('./database.json');
 
 const setupDatabase = () => {
   // opts and contacts have to be emptied before setting up initial database

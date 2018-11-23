@@ -14,16 +14,14 @@ const contactSchema = mongoose.Schema({
     required : true,
     unique : true
   },
-  createdOn : {
-    type : Date,
-    default : Date.now(),
-    required : true
-  },
   isDeleted : {
     type : Boolean,
     default : false,
     required : true
-  }
+  },
+},
+{
+  timestamps : true
 });
 
 const Contact = module.exports = mongoose.model('Contact', contactSchema);

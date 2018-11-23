@@ -21,7 +21,7 @@ const apiRouter = express.Router();
 
 */
 
-
+// returns an object of contact objects
 apiRouter.get('/contacts',
 (req, res) => {
   const query = {
@@ -49,6 +49,7 @@ apiRouter.get('/contacts',
   });
 });
 
+// returns an arrays of otp objects
 apiRouter.get('/otps',
 (req, res) => {
   const query = {
@@ -57,8 +58,9 @@ apiRouter.get('/otps',
   const sortCondition = {
     sentOn : -1 //descending order
   }
-  Otp.find(query, { sort : sortCondition }, (err, otps) => {
+  Otp.find(query, null, { sort : sortCondition }, (err, otps) => {
     if(err){
+      console.log(err);
       return res.json({
         success : false,
         message : "Internal server error"
@@ -79,39 +81,63 @@ apiRouter.get('/otps',
   });
 });
 
+// returns true when sending is done
+// requires contactID, phoneNumber, otp in the request's body
 apiRouter.post('/sendotp',
 (req, res) => {
   const { contactID, phoneNumber, otp } = req.body;
   //otp has to be of length 6 and has to be a number
   if(otp.length === 6 && !isNaN(otp)){
-    const newOtp = {
-      body : otp,
-      contactID : contactID
+    const query = {
+      _id : contactID,
+      phoneNumber : phoneNumber,
+      isDeleted : false
     };
-    twilioClient.messages.create({
-      from : "whatsapp:" + process.env.TWILIO_WHATSAPP_NUMBER,
-      to : "whatsapp:" + phoneNumber,
-      body : "Hi. Your OTP is: " + otp
-    }).then((message) => {
-      Otp.create(newOtp, (err, otp) => {
-        if(err){
-          return res.json({
-            success : false,
-            message : "Internal server error"
+    Contact.find(query, (err, contacts) => {
+      if(err){
+        console.log(err);
+        return res.json({
+          success : false,
+          message : "Internal server error"
+        });
+      }else{
+        if(contacts.length === 1){
+          twilioClient.messages.create({
+            from : "whatsapp:" + process.env.TWILIO_WHATSAPP_NUMBER,
+            to : "whatsapp:" + phoneNumber,
+            body : "Hi. Your OTP is: " + otp
+          }).then((message) => {
+            const newOtp = {
+              body : otp,
+              contactID : contactID
+            };
+            Otp.create(newOtp, (err, otp) => {
+              if(err){
+                return res.json({
+                  success : false,
+                  message : "Internal server error"
+                });
+              }else{
+                return res.json({
+                  success : true,
+                  message : "OTP sent successfully"
+                });
+              }
+            });
+          }).catch((err) => {
+            console.log(err);
+            return res.json({
+              success : false,
+              message : "Internal server error"
+            });
           });
         }else{
           return res.json({
-            success : true,
-            message : "OTP sent successfully"
+            success : false,
+            message : "Contact not found"
           });
         }
-      });
-    }).catch((err) => {
-      console.log(err);
-      return res.json({
-        success : false,
-        message : "Internal server error"
-      });
+      }
     });
   }else{
     return res.json({

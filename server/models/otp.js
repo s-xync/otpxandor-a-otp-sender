@@ -9,15 +9,15 @@ const otpSchema = mongoose.Schema({
     type : mongoose.Schema.Types.ObjectId,
     required : true
   },
-  sentOn : {
-    type : Date,
-    default : Date.now(),
-    required : true
-  },
   isDeleted : {
     type : Boolean,
     default : false,
     required : true
+  }
+},
+{
+  timestamps : {
+    createdAt : 'sentOn'
   }
 });
 
