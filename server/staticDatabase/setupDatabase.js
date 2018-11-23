@@ -6,8 +6,8 @@ const contacsData = require('./database.json');
 const setupDatabase = () => {
   // opts and contacts have to be emptied before setting up initial database
   // static json file will be read which contains contacts information
-  Otp.remove({}, (err) => {
-    Contact.remove({}, (err) => {
+  Otp.deleteMany({}, (err) => {
+    Contact.deleteMany({}, (err) => {
       console.log('contacts, otps dropped!');
       contacsData.forEach((newContact) => {
         if(newContact.lastName && newContact.firstName && newContact.phoneNumber){
