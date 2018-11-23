@@ -1,9 +1,26 @@
 const express = require('express');
+const twilio = require('twilio');
+const dotenv = require('dotenv');
 
 const Contact = require('../models/contact.js');
 const Otp = require('../models/otp.js');
 
+dotenv.config();
+
+twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
 const apiRouter = express.Router();
+
+/*
+
+*  GET contacts
+
+*  GET otps
+
+*  POST sendotp
+
+*/
+
 
 apiRouter.get('/contacts',
 (req, res) => {
@@ -64,25 +81,42 @@ apiRouter.get('/otps',
 
 apiRouter.post('/sendotp',
 (req, res) => {
-  const { contactID, otp } = req.body;
+  const { contactID, phoneNumber, otp } = req.body;
   //otp has to be of length 6 and has to be a number
   if(otp.length === 6 && !isNaN(otp)){
     const newOtp = {
       body : otp,
       contactID : contactID
     };
-    Otp.create(newOtp, (err, otp) => {
-      if(err){
-        return res.json({
-          success : false,
-          message : "Internal server error"
-        });
-      }else{
-        return res.json({
-          success : true,
-          message : "OTP sent successfully"
-        });
-      }
+    twilioClient.messages.create({
+      from : "whatsapp:" + process.env.TWILIO_WHATSAPP_NUMBER,
+      to : "whatsapp:" + phoneNumber,
+      body : "Hi. Your OTP is: " + otp
+    }).then((message) => {
+      Otp.create(newOtp, (err, otp) => {
+        if(err){
+          return res.json({
+            success : false,
+            message : "Internal server error"
+          });
+        }else{
+          return res.json({
+            success : true,
+            message : "OTP sent successfully"
+          });
+        }
+      });
+    }).catch((err) => {
+      console.log(err);
+      return res.json({
+        success : false,
+        message : "Internal server error"
+      });
+    });
+  }else{
+    return res.json({
+      success : false,
+      message : "OTP should be a six digit number"
     });
   }
 });
