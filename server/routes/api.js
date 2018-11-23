@@ -32,5 +32,35 @@ apiRouter.get('/contacts',
   });
 });
 
+apiRouter.get('/otps',
+(req, res) => {
+  const query = {
+    isDeleted : false
+  };
+  const sortCondition = {
+    sentOn : -1 //descending order
+  }
+  Otp.find(query, { sort : sortCondition }, (err, otps) => {
+    if(err){
+      return res.json({
+        success : false,
+        message : "Internal server error"
+      });
+    }else{
+      let otpsArr = [];
+      otps.forEach((otp) => {
+        const { _id, contactID, body, sentOn } = otp;
+        const id = _id;
+        otpsArr.push({ id, contactID, body, sentOn });
+      })
+      return res.json({
+        success : true,
+        message : "Otps retrieved successfully",
+        otps : otpsArr
+      });
+    }
+  });
+});
+
 
 module.exports = apiRouter;
