@@ -7,8 +7,7 @@ export const resetStateOfMessageBody = () => (dispatch) => {
   });
 };
 
-export const setMessageBody = (event) => (dispatch) => {
-  const { value } = event.target;
+export const setMessageBody = (value) => (dispatch) => {
   if(value.length > 0){
     const valueArr = value.split(" ");
     if(valueArr.length === 6){

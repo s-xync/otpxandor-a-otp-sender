@@ -6,6 +6,24 @@ import NavBar from './navBar';
 import { resetStateOfMessageBody, setMessageBody } from '../actions/messageActions';
 
 class SendOtp extends Component{
+
+  componentDidMount(){
+    this.setInitialRandomOtp()
+
+  }
+
+  setInitialRandomOtp = () => {
+    let initialMessage = "Hi. Your OTP is : ";
+    const randomNumber = Math.floor(100000 + Math.random() * 899999);
+    initialMessage += randomNumber.toString();
+    this.props.setMessageBody(initialMessage)
+  }
+
+  handleSetMessageBody = (event) => {
+    this.props.setMessageBody(event.target.value);
+  }
+
+
   render(){
     if(Object.values(this.props.contacts).length === 0){
       return (
@@ -24,7 +42,7 @@ class SendOtp extends Component{
               <form>
                 <div className="form-group">
                   <label htmlFor="bodyMessage" className="lead">Message Body</label>
-                  <textarea type="text" className="form-control" id="bodyMessage" aria-describedby="bodyMessageHelp" placeholder="Hi. Your OTP is : 123456" value={this.props.bodyMessage} onChange={this.props.setMessageBody} required></textarea>
+                  <textarea type="text" className="form-control" id="bodyMessage" aria-describedby="bodyMessageHelp" placeholder="Hi. Your OTP is : 123456" value={this.props.bodyMessage} onChange={this.handleSetMessageBody} required></textarea>
                   <small id="bodyMessageHelp" className={"form-text " + this.props.bodyMessageHelpClass}>{this.props.bodyMessageHelp}</small>
                 </div>
                   <button type="submit" className="btn btn-primary btn-lg" disabled={!(this.props.bodyMessageFlag)} onClick={this.handleMessageSubmit}>Send OTP</button>
