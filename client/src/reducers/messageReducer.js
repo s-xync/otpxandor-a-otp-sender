@@ -1,10 +1,11 @@
-import { RESET_STATE_OF_MESSAGE_BODY, SET_MESSAGE_BODY } from '../actions/types';
+import { RESET_STATE_OF_MESSAGE_BODY, SET_MESSAGE_BODY, SET_SEND_OTP_DONE } from '../actions/types';
 
 const initialState = {
   bodyMessage : "",
   bodyMessageHelp : "",
   bodyMessageHelpClass : "",
-  bodyMessageFlag : false
+  bodyMessageFlag : false,
+  sendOtpDone : false
 };
 
 export default (state = initialState, action) => {
@@ -20,6 +21,12 @@ export default (state = initialState, action) => {
         bodyMessageHelp,
         bodyMessageHelpClass,
         bodyMessageFlag
+      };
+    }
+    case SET_SEND_OTP_DONE:{
+      return {
+        ...state,
+        sendOtpDone : true
       };
     }
     default:{

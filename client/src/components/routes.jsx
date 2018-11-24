@@ -6,6 +6,7 @@ import axios from 'axios';
 import { setApiUrl } from '../actions/apiUrlActions';
 import { setContactsDetails } from '../actions/contactsActions';
 import { setOtpsDetails } from '../actions/otpsActions';
+import { setGetAllDataFlag } from '../actions/commonActions';
 import Contacts from './contacts';
 import ContactDetails from './contactDetails';
 import SendOtp from './sendOtp';
@@ -18,11 +19,15 @@ class Routes extends Component{
   }
 
   componentDidUpdate(prevProps, prevState){
-    if((prevProps.apiUrl !== this.props.apiUrl) && this.props.apiUrl){
+    if(prevProps.apiUrl !== this.props.apiUrl && this.props.apiUrl){
       this.getAllData();
     }
-  }
 
+    if(prevProps.getAllDataFlag !== this.props.getAllDataFlag && this.props.getAllDataFlag){
+      this.getAllData();
+      this.props.setGetAllDataFlag(false);
+    }
+  }
 
   getAllData = () => {
     if(this.props.apiUrl){
@@ -42,8 +47,6 @@ class Routes extends Component{
       });
     }
   };
-
-
 
   render(){
     return(
@@ -65,11 +68,14 @@ Routes.propTypes = {
   apiUrl : propTypes.string.isRequired,
   setApiUrl : propTypes.func.isRequired,
   setContactsDetails : propTypes.func.isRequired,
-  setOtpsDetails : propTypes.func.isRequired
+  setOtpsDetails : propTypes.func.isRequired,
+  getAllDataFlag : propTypes.bool.isRequired,
+  setGetAllDataFlag : propTypes.func.isRequired
 };
 
-const mapStateToProps = ({ apiUrl }) => ({
-  apiUrl : apiUrl.value
+const mapStateToProps = ({ apiUrl, common }) => ({
+  apiUrl : apiUrl.value,
+  getAllDataFlag : common.getAllDataFlag
 });
 
-export default connect(mapStateToProps, { setApiUrl, setContactsDetails, setOtpsDetails })(Routes);
+export default connect(mapStateToProps, { setApiUrl, setContactsDetails, setOtpsDetails, setGetAllDataFlag })(Routes);
