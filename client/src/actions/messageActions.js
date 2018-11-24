@@ -1,4 +1,4 @@
-import { RESET_STATE_OF_MESSAGE_BODY, SET_MESSAGE_BODY, SET_SEND_OTP_DONE } from './types';
+import { RESET_STATE_OF_MESSAGE_BODY, SET_MESSAGE_BODY } from './types';
 
 export const resetStateOfMessageBody = () => (dispatch) => {
   dispatch({
@@ -66,11 +66,4 @@ export const setMessageBody = (value) => (dispatch) => {
       }
     });
   }
-};
-
-export const setSendOtpDone = () => (dispatch) => {
-  dispatch({
-    type : SET_SEND_OTP_DONE,
-    payload : null
-  });
 };

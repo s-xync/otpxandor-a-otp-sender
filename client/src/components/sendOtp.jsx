@@ -4,7 +4,7 @@ import axios from 'axios';
 import propTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import NavBar from './navBar';
-import { resetStateOfMessageBody, setMessageBody, setSendOtpDone } from '../actions/messageActions';
+import { resetStateOfMessageBody, setMessageBody } from '../actions/messageActions';
 import { setGetAllDataFlag } from '../actions/commonActions';
 
 class SendOtp extends Component{
@@ -39,7 +39,6 @@ class SendOtp extends Component{
       }).then((response) => {
         if(response.data.success){
           this.props.setGetAllDataFlag(true);
-          this.props.setSendOtpDone();
         }else{
           console.log(response.log.message);
         }
@@ -48,7 +47,7 @@ class SendOtp extends Component{
   }
 
   renderRedirectSendOtpDone = () => {
-    if(this.props.sendOtpDone){
+    if(this.props.getAllDataFlag){
       return (
         <Redirect to="/contacts" />
       );
@@ -98,19 +97,18 @@ SendOtp.propTypes = {
   resetStateOfMessageBody : propTypes.func.isRequired,
   setMessageBody : propTypes.func.isRequired,
   setGetAllDataFlag : propTypes.func.isRequired,
-  setSendOtpDone : propTypes.func.isRequired,
-  sendOtpDone : propTypes.bool.isRequired
+  getAllDataFlag : propTypes.bool.isRequired
 };
 
-const mapStateToProps = ({ apiUrl, contacts, message }) => ({
+const mapStateToProps = ({ apiUrl, contacts, message, common }) => ({
   apiUrl : apiUrl.value,
   contacts : contacts,
   bodyMessage : message.bodyMessage,
   bodyMessageHelp : message.bodyMessageHelp,
   bodyMessageHelpClass : message.bodyMessageHelpClass,
   bodyMessageFlag : message.bodyMessageFlag,
-  sendOtpDone : message.sendOtpDone
+  getAllDataFlag : common.getAllDataFlag
 });
 
 
-export default connect(mapStateToProps, { resetStateOfMessageBody, setMessageBody, setGetAllDataFlag, setSendOtpDone })(SendOtp);
+export default connect(mapStateToProps, { resetStateOfMessageBody, setMessageBody, setGetAllDataFlag })(SendOtp);
