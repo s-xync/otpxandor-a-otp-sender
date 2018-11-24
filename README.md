@@ -1,5 +1,7 @@
 # XANDOR - An OTP Sender  
 
+OTPXANDOR is an OTP sending application. It can be used to send OTPs through Whatsapp. The back-end is built as a micro-service architecture and the front-end and back-end are completely separate. The app uses Twilio API to send messages on Whatsapp. Both front-end and back-end are built on Node JS. The back-end uses Express JS and the front-end uses React JS. The style and the responsiveness of the front-end was handled using Bootstrap.  
+
 First of all, make sure you have `nodejs`, `mongodb` installed on you system.  
 First install `yarn` globally using `sudo npm install -g yarn`. We will use `yarn` instead of `npm`.  
 
